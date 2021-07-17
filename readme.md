@@ -5,22 +5,40 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-
 ## Name
+
 ## Description
+
 ## Visuals
+
 ## Prerequisites
+
+| Python  | > 3.96             |
+| :------ | :----------------- |
+| Support | :white_check_mark: |
+
+| Database | PostgreSQL               |
+| :------- | :----------------------- |
+| Support  | :white_check_mark: 12,13 |
+
 ## Installation
+
 ## Usage
+
 ## Support
+
 ## Roadmap
+
 ## Authors and acknowledgement
+
 Yangxuan Cho - yangxuan.1996@gmail.com
+
 ## License
+
 ## Project status
 
-
 <!-- MARKDOWN LINKS & IMAGES -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
 [contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
