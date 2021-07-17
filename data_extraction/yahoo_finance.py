@@ -41,19 +41,19 @@ def get_statistics(ticker: str) -> dict:
         soup = BeautifulSoup(html, 'lxml')
 
         features = soup.find_all('tr', class_='Bxz(bb)')
-
-        statistics = {}
+        currency_declaration = soup.find_all('div', class_='C($gray)')[0].text
+        statistics = {"currency": currency_declaration}
 
         footnotesCount = 7
 
         for feature in features:
             if len(feature.contents) == 2:
-                name, value = feature.contents[0].text, feature.contents[1].text
+                name, value = feature.contents[0].text, convert_to_digits(feature.contents[1].text)
                 if name[-1] in [str(num) for num in range(footnotesCount+1)]:
                     name = name[:-2]
-                statistics[name.rstrip()] = convert_to_digits(
-                    value)
-                print(name, value)
+                statistics[name.rstrip()] = value
+                print(f"{name: <50} - {value: <20}")
+
         return pp.pprint(statistics)
 
     except Exception as e:
@@ -77,32 +77,31 @@ def get_financials(ticker: str, statement_type: int) -> dict:
         soup = BeautifulSoup(html, 'lxml')
 
         features = soup.find_all('div', class_='D(tbr)')
-
+        currency_units_declaration = soup.find_all('span', class_='Fz(xs)')[0].text.split(". ")
+        currency = currency_units_declaration[0]
+        units = currency_units_declaration[1]
         headers = []
         temp_list = []
         final = []
-        index = 0
+        index = 1
+
         # create headers
-        for item in features[0].find_all('div', class_='D(ib)'):
-            headers.append(item.text)
+        for header in features[0].contents:
+            headers.append(header.text)
         # statement contents
-        while index <= len(features)-1:
-            # filter for each line of the statement
-            temp = features[index].find_all('div', class_='D(tbc)')
-            for line in temp:
-                # each item adding to a temporary list
-                temp_list.append(line.text)
-            # temp_list added to final list
+        while index < len(features):
+            for col in features[index].contents:
+                temp_list.append(col.text)
+
             final.append(temp_list)
             # clear temp_list
             temp_list = []
             index += 1
-        df = pd.DataFrame(final[1:])
+        df = pd.DataFrame(final[:])
         df.columns = headers
 
-        for column in headers[1:]:
-            df[column] = common_functions.convert_to_numeric(df[column])
         final_df = df.fillna('-')
+        print(f"Currency: {currency}, units: {units}")
         return final_df
 
     except Exception as e:
@@ -135,8 +134,9 @@ class FinancialStatement(Enum):
 
 
 if __name__ == "__main__":
-    # print(get_financials("BABA", FinancialStatement.IS.value))
-    # print(get_financials("BABA", FinancialStatement.BS.value))
-    # print(get_financials("BABA", FinancialStatement.CF.value))
-    print(get_statistics("BABA"))
-    # print(get_stock_prices("BABA"))
+    # print(get_financials("TSM", FinancialStatement.IS.value))
+    # print(get_financials("TSM", FinancialStatement.BS.value))
+    # print(get_financials("TSM", FinancialStatement.CF.value))
+    get_statistics("TSM")
+    # print(get_stock_prices("TSM"))
+
