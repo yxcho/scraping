@@ -1,9 +1,7 @@
-# import pandas as pd
 from posixpath import islink
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
-import yfinance as yf
 import pandas as pd
 from enum import Enum
 # from ..general import common_functions
