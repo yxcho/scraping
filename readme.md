@@ -31,10 +31,18 @@
 
 ## Authors and acknowledgement
 
-Yangxuan Cho - yangxuan.1996@gmail.com
+Yangxuan Cho - yangxuan.1996@gmail.com  
+Sylvia Goh - sgxh98@gmail.com  
 
 ## License
 
+## Resources
+- https://finance.yahoo.com/
+- https://www.investing.com/
+- https://finviz.com/
+- <a href="https://www.exchangerate-api.com">Rates By Exchange Rate API</a>
+- http://www.market-risk-premia.com/us.html
+- http://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html
 ## Project status
 
 <!-- MARKDOWN LINKS & IMAGES -->
