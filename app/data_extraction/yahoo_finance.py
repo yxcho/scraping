@@ -1,5 +1,5 @@
-from posixpath import islink
-from sys import api_version
+# import sys
+# sys.path.append('../') 
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -8,7 +8,7 @@ from enum import Enum
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 pd.options.display.float_format = '{:.0f}'.format
-
+from general import common_functions
 
 # def convert_to_digits(numString: str) -> int:
 #     """
@@ -27,12 +27,13 @@ pd.options.display.float_format = '{:.0f}'.format
 #         print(f"Exception raised: {e}")
 
 
-def get_statistics(ticker: str) -> dict:
+
+def get_analysis(ticker: str) -> dict:
     """
     Take note of the currency
     """
     try:
-        is_link = f'https://finance.yahoo.com/quote/{ticker}/key-statistics?p={ticker}'
+        is_link = f'https://finance.yahoo.com/quote/{ticker}/analysis?p={ticker}'
         driver = webdriver.Chrome(ChromeDriverManager().install())
         driver.get(is_link)
         html = driver.execute_script('return document.body.innerHTML;')
@@ -40,7 +41,7 @@ def get_statistics(ticker: str) -> dict:
 
         features = soup.find_all('tr', class_='Bxz(bb)')
         currency_declaration = soup.find_all('div', class_='C($gray)')[0].text
-        statistics = {"currency": currency_declaration}
+        statistics = {"statement currency": currency_declaration}
 
         footnotesCount = 7
 
@@ -99,11 +100,47 @@ def get_financials(ticker: str, statement_type: int) -> dict:
         df.columns = headers
 
         final_df = df.fillna('-')
-        print(f"Currency: {currency}, units: {units}")
+        print(f"Statement currency: {currency}, units: {units}")
         return final_df
 
     except Exception as e:
         print(f"Exception raised: {e}")
+
+
+
+def get_statistics(ticker: str) -> dict:
+    """
+    Take note of the currency
+    """
+    try:
+        is_link = f'https://finance.yahoo.com/quote/{ticker}/key-statistics?p={ticker}'
+        driver = webdriver.Chrome(ChromeDriverManager().install())
+        driver.get(is_link)
+        html = driver.execute_script('return document.body.innerHTML;')
+        soup = BeautifulSoup(html, 'lxml')
+
+        features = soup.find_all('tr', class_='Bxz(bb)')
+        currency_declaration = soup.find_all('div', class_='C($gray)')[0].text
+        statistics = {"statement currency": currency_declaration}
+
+        footnotesCount = 7
+
+        for feature in features:
+            if len(feature.contents) == 2:
+                name, value = feature.contents[0].text, common_functions.convert_to_digits(feature.contents[1].text)
+                if name[-1] in [str(num) for num in range(footnotesCount+1)]:
+                    name = name[:-2]
+                statistics[name.rstrip()] = value
+                print(f"{name: <50} - {value: <20}")
+
+        return pp.pprint(statistics)
+
+    except Exception as e:
+        print(f"Exception raised: {e}")
+
+
+
+
 
 
 def get_stock_prices(ticker):
@@ -116,13 +153,12 @@ def get_stock_prices(ticker):
     html = driver.execute_script("return document.body.innerHTML;")
 
     soup = BeautifulSoup(html, 'lxml')
+    currency = soup.find_all("div", class_= "C($tertiaryColor) Fz(12px)")[0].text
 
     close_price = [entry.text for entry in soup.find_all(
         'span', {'class': 'Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)'})]
-    # after_hours_price = [entry.text for entry in soup.find_all(
-    #     'span', {'class': 'C($primaryColor) Fz(24px) Fw(b)'})]
 
-    return close_price[0]  # , after_hours_price)
+    return currency, close_price[0] 
 
 
 class FinancialStatement(Enum):
@@ -132,8 +168,6 @@ class FinancialStatement(Enum):
 
 
 if __name__ == "__main__":
-    from app.general import common_functions
-
     # print(get_financials("TSM", FinancialStatement.IS.value))
     # print(get_financials("TSM", FinancialStatement.BS.value))
     # print(get_financials("TSM", FinancialStatement.CF.value))

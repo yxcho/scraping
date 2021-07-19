@@ -126,4 +126,4 @@ dmypy.json
 
 
 # calculations folder
-/calculations
+/app/calculations
