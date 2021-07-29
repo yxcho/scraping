@@ -39,6 +39,9 @@ def get_statistics(ticker: str) -> dict:
         statistics = {}
 
         features = soup.find_all('tr', class_='table-dark-row')
+        if len(features) == 0:
+            return None
+            
         features = features[:FINVIZ_TABLE_ROW]
 
         for row in range(len(features)):
@@ -56,24 +59,6 @@ def get_statistics(ticker: str) -> dict:
         print(f"Exception raised: {e}")
 
 
-def stock_prices(ticker):
-
-    driver = webdriver.Chrome(ChromeDriverManager().install())
-
-    driver.get(
-        f'https://finance.yahoo.com/quote/{ticker}/key-statistics?p={ticker}')
-
-    html = driver.execute_script("return document.body.innerHTML;")
-
-    soup = BeautifulSoup(html, 'lxml')
-
-    close_price = [entry.text for entry in soup.find_all(
-        'span', {'class': 'Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)'})]
-    after_hours_price = [entry.text for entry in soup.find_all(
-        'span', {'class': 'C($primaryColor) Fz(24px) Fw(b)'})]
-
-    return(close_price, after_hours_price)
-
 
 if __name__ == "__main__":
-    get_statistics("AAPL")
+    get_statistics("TSM")
