@@ -1,6 +1,14 @@
-# Run a test server.
+import time
 from app import app
-import system_config
+from system_config import Config
 
 
-app.run(host=system_config.host, port=system_config.port, debug=False)
+def main():
+    app.run(host=Config.host, port=Config.port, debug=True, use_reloader=False)
+
+    while True:
+        print("test")
+        time.sleep(5)
+
+
+main()
