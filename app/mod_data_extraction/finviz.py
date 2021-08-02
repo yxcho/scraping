@@ -52,7 +52,7 @@ def get_statistics(ticker: str) -> dict:
                 value = convert_to_digits(features[row].contents[col+1].text)
                 statistics[name] = value
                 print(f"{name: <20} - {value: <20}")
-
+        driver.close()
         return statistics
 
     except Exception as e:

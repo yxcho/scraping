@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 import time, requests
+from app.mod_general import common_functions
 
 def get_icoc(country):
     try:
@@ -46,8 +47,8 @@ def get_icoc(country):
         for row in features:
             if len(row.contents) == 7:
                 name = row.contents[1].text
-                company_ratio = convert_to_digits(row.contents[3].text)
-                industry_ratio = convert_to_digits(row.contents[5].text)
+                company_ratio = common_functions.convert_to_digits(row.contents[3].text)
+                industry_ratio = common_functions.convert_to_digits(row.contents[5].text)
                 ratios[name] = [company_ratio, industry_ratio]
                 # print(f"{name}: {company_ratio}, {industry_ratio}")
                 print(f"{name: <50} - {company_ratio: <10} - {industry_ratio: <10}")

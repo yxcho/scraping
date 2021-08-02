@@ -19,3 +19,4 @@ class Config:
     db_port = os.getenv(f"{environment}_DB_PORT")
     db_name = os.getenv(f"{environment}_DB_NAME")
     SQLALCHEMY_DATABASE_URI = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
