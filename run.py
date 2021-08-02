@@ -1,3 +1,6 @@
 # Run a test server.
 from app import app
-app.run(host='0.0.0.0', port=8080, debug=True)
+import system_config
+
+
+app.run(host=system_config.host, port=system_config.port, debug=False)

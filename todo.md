@@ -8,9 +8,10 @@ Coding stuff
 
 
 Features
-1. scrape data
+1. scrape and display data
     - DONE check currency and unit
     - DONE finviz
 2. calculate intrinsic value
-3. (moonshot) evaluate how worthy of buying a stock is
-4. (moonshot) predict price of a stock
+3. make a watchlist of companies to monitor their prices
+4. (moonshot) evaluate how worthy of buying a stock is taking other factors in to account
+5. (moonshot) predict price of a stock

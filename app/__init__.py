@@ -5,7 +5,7 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 # Define the WSGI application object
-app = Flask(__name__)
+app = Flask("scraping")
 
 # Configurations
 app.config.from_object('config')
