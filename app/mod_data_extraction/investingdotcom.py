@@ -4,7 +4,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from app.mod_general import common_functions
 
 
-def get_ratios(url):
+def get_ratios(url: str) -> dict:
     """go to investing.com, search for the stock, go to Financials -> Ratios, use the link
     eg: https://www.investing.com/equities/mcdonalds-ratios
     """

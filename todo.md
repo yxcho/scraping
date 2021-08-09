@@ -1,5 +1,5 @@
 Coding stuff
-1. http server
+1. (DONE) http server
 2. database
 3. logging
 4. unit testing
