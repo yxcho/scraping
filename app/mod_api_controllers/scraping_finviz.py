@@ -1,15 +1,15 @@
 from flask_restful import Resource, request
-from app.mod_data_extraction import investingdotcom
+from app.mod_data_extraction import finviz
 
 # follow this JSON response format:
 # https://github.com/omniti-labs/jsend
-class InvestingDotCom(Resource):
+class Statistics(Resource):
     def get(self):
         try:
             data = request.json
-            investing_dotcom_url = data["ratio_url"]
-            if investing_dotcom_url:
-                ratios = investingdotcom.get_ratios(investing_dotcom_url)
+            ticker = data["ticker"].upper()
+            if ticker:
+                ratios = finviz.get_statistics(ticker)
                 status = "success"
             else:
                 status = "fail"
@@ -17,6 +17,7 @@ class InvestingDotCom(Resource):
             return {"status": status, "data": ratios}, 200
 
         except Exception as e:
-            msg = f"InvestingDotCom API class raised exception: {e}"
+            msg = f"Finviz API class raised exception: {e}"
             print(msg)
             return {"status": "error", "message": msg}, 204
+

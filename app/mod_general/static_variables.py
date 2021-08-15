@@ -161,3 +161,10 @@
 # YER	Yemeni Rial	Yemen
 # ZAR	South African Rand	South Africa
 # ZMW	Zambian Kwacha	Zambia
+
+from enum import Enum
+
+class FinancialStatement(Enum):
+    IS = "Income Statement"
+    BS = "Balance Sheet"
+    CF = "Cash Flow"
