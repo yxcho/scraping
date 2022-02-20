@@ -71,6 +71,7 @@ def calculate_iv(ticker: str):
         discount_rate = DiscountRateCalculator(risk_free_rate, company_beta, market_risk_premium).get_company_discount_rate()
         pv = DCFCalculator(cash_flow, one_to_five_y_growth_rate, six_to_ten_y_growth_rate, eleven_to_twenty_y_growth_rate, discount_rate).get_pv_of_20y_fcf()
         final_iv = IVCalculator(shares_outstanding, total_debt, cash_and_inv, pv).get_final_iv()
+        print(f"Estimated intrinsic value: {final_iv} vs Current price: {currrent_price}")
         return final_iv
 
     except Exception as e:
