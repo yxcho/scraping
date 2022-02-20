@@ -6,8 +6,9 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 ## Name
-
+Stock intrinsic value calculator
 ## Description
+Uses free discounted cash flow (10/ 20 years) to estimate intrinsic value of a stock
 
 ## Visuals
 
@@ -21,9 +22,21 @@
 | :------- | :----------------------- |
 | Support  | :white_check_mark: 12,13 |
 
+Software: 
+google chrome
+register and get API keys from alpha vantage and rapid-api. put your keys in .env file
+
+On mac, using postgres.app, make sure terminal can locate pg_config (by running "which pg_config" to find out). if not, 
+run this on terminal:
+sudo mkdir -p /etc/paths.d &&
+echo /Applications/Postgres.app/Contents/Versions/latest/bin | sudo tee /etc/paths.d/postgresapp
 ## Installation
+python -m venv .venv
+pip install -r requirements.txt
+set up .env based on .env.example. make sure to change the dbusername and password
 
 ## Usage
+python run.py
 
 ## Support
 

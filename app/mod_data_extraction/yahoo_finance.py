@@ -1,6 +1,6 @@
 # import sys
 # sys.path.append('../')
-# from app.mod_general import common_functions
+from app.mod_general import common_functions
 # from app.mod_general.static_variables import FinancialStatement
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -13,13 +13,19 @@ from enum import Enum
 def get_analysis(ticker: str) -> dict:
     """
     Take note of the currency
+    {'Earnings Estimate': {'No. of Analysts': '30', 'Avg. Estimate': '25.78', 'Low Estimate': '22.9', 'High Estimate': '30', 'Year Ago EPS': '26.29'}, 
+    'Revenue Estimate': {'No. of Analysts': '30', 'Avg. Estimate': '68.12B', 'Low Estimate': '65.41B', 'High Estimate': '70.72B', 'Year Ago Sales': '55.31B', 'Sales Growth (year/est)': '23.20%'}, 
+    'Earnings History': {'EPS Est.': '15.82', 'EPS Actual': '26.29', 'Difference': '10.47', 'Surprise %': '66.20%'}, 
+    'EPS Trend': {'Current Estimate': '25.78', '7 Days Ago': '24.84', '30 Days Ago': '25.02', '60 Days Ago': '25.08', '90 Days Ago': '25.02'}, 
+    'EPS Revisions': {'Up Last 7 Days': 'N/A', 'Up Last 30 Days': '21', 'Down Last 7 Days': 'N/A', 'Down Last 30 Days': 'N/A'}, 
+    'Growth Estimates': {'Current Qtr.': '-1.90%', 'Next Qtr.': '2.60%', 'Current Year': '3.40%', 'Next Year': '16.60%', 'Next 5 Years (per annum)': '27.56%', 'Past 5 Years (per annum)': '14.93%'}, 'Symbol': {None: '26.13'}}
     """
     try:
         is_link = f'https://finance.yahoo.com/quote/{ticker}/analysis?p={ticker}'
         driver = webdriver.Chrome(ChromeDriverManager().install())
         driver.get(is_link)
         html = driver.execute_script('return document.body.innerHTML;')
-        soup = BeautifulSoup(html, 'lxml')
+        soup = BeautifulSoup(html, "html.parser")
 
         features = soup.find_all('table', class_='W(100%)')
         if len(features) == 0:
@@ -29,20 +35,22 @@ def get_analysis(ticker: str) -> dict:
         statistics = {"statement currency": currency_declaration}
 
         footnotesCount = 7
+        analysis_tables: dict[str, list] = {}
 
         for feature in features:
-            if len(feature.contents) == 2:
-                name, value = feature.contents[0].text, common_functions.convert_to_digits(
-                    feature.contents[1].text)
-                if name[-1] in [str(num) for num in range(footnotesCount+1)]:
-                    name = name[:-2]
-                statistics[name.rstrip()] = value
-                print(f"{name: <50} - {value: <20}")
+            table_name = feature.contents[0].contents[0].contents[0].text
+            analysis_tables[table_name] = {}
+            for table_row in feature.contents[1].contents:
+                row_name = table_row.contents[0].string
+                row_data = table_row.contents[1].string
+                analysis_tables[table_name][row_name] = row_data
+
+            # print(table_name, analysis_tables[table_name])
         driver.close()
-        return statistics
+        return analysis_tables
 
     except Exception as e:
-        print(f"Exception raised: {e}")
+        print(f"get_analysis exception raised: {e}")
 
 
 def get_financials(ticker: str, statement_type: int) -> dict:
@@ -143,7 +151,7 @@ def get_financials(ticker: str, statement_type: int) -> dict:
         driver = webdriver.Chrome(ChromeDriverManager().install())
         driver.get(is_link)
         html = driver.execute_script('return document.body.innerHTML;')
-        soup = BeautifulSoup(html, 'lxml')
+        soup = BeautifulSoup(html, "html.parser")
 
         features = soup.find_all('div', class_='D(tbr)')
         if len(features) == 0:
@@ -200,7 +208,7 @@ def get_statistics(ticker: str) -> dict:
         driver = webdriver.Chrome(ChromeDriverManager().install())
         driver.get(is_link)
         html = driver.execute_script('return document.body.innerHTML;')
-        soup = BeautifulSoup(html, 'lxml')
+        soup = BeautifulSoup(html, "html.parser")
 
         features = soup.find_all('tr', class_='Bxz(bb)')
         if len(features) == 0:
@@ -235,7 +243,7 @@ def get_stock_prices(ticker):
 
     html = driver.execute_script("return document.body.innerHTML;")
 
-    soup = BeautifulSoup(html, 'lxml')
+    soup = BeautifulSoup(html, "html.parser")
     currency = soup.find_all(
         "div", class_="C($tertiaryColor) Fz(12px)")[0].text
 

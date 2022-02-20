@@ -12,7 +12,7 @@ def get_ratios(url: str) -> dict:
         driver = webdriver.Chrome(ChromeDriverManager().install())
         driver.get(url)
         html = driver.execute_script('return document.body.innerHTML;')
-        soup = BeautifulSoup(html, 'lxml')
+        soup = BeautifulSoup(html, "html.parser")
 
         ratios = {}
 

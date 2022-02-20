@@ -26,3 +26,14 @@ def convert_to_digits(numString: str) -> int:
         return numInt
     except Exception as e:
         print(f"Exception raised: {e}")
+
+
+def convert_percentage_to_float(percent_str: str) -> float:
+    """
+    Convert "27.56%" to 0.2756
+    """
+    try:
+        if percent_str[-1] == "%":
+            return float(percent_str[:-1])/100
+    except Exception as e:
+        print(f"Exception raised: {e}")

@@ -26,7 +26,7 @@ def get_icoc(country):
         #     'class':'js-event-list-tournament-events'})
 
         res = requests.get(url)
-        soup = BeautifulSoup(res.text, 'lxml')
+        soup = BeautifulSoup(res.text, "html.parser")
         for row in soup.find('table').find_all('tr'):
             for col in row.contents:
                 print(col.text)
@@ -36,7 +36,7 @@ def get_icoc(country):
 
 
         html = driver.execute_script('return document.body.innerHTML;')
-        soup = BeautifulSoup(html, 'lxml')
+        soup = BeautifulSoup(html, "html.parser")
 
 
         ratios = {}
